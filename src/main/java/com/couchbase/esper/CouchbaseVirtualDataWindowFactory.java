@@ -23,8 +23,8 @@ public class CouchbaseVirtualDataWindowFactory implements VirtualDataWindowFacto
     public void initialize(VirtualDataWindowFactoryContext virtualDataWindowFactoryContext) {
         log.debug(virtualDataWindowFactoryContext);
 
-        cluster = CouchbaseCluster.create("localhost");
-        bucket = cluster.openBucket("default");
+        cluster = CouchbaseCluster.create("10.253.128.174");
+        bucket = cluster.openBucket("esper");
     }
 
     public VirtualDataWindow create(VirtualDataWindowContext context) {

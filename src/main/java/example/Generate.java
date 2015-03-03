@@ -17,13 +17,43 @@ public class Generate {
         ObjectMapper mapper = new ObjectMapper();
         String json = null;
         try {
-            json = mapper.writeValueAsString(new Data("hello", 12.12));
+            json = mapper.writeValueAsString(new Data("hello", 13.12));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        Cluster cluster = CouchbaseCluster.create("localhost");
-        Bucket bucket = cluster.openBucket("default");
-        bucket.upsert(RawJsonDocument.create("_test", json));
+       final String value = json;
+
+        Cluster cluster = CouchbaseCluster.create("10.253.128.174");
+        final Bucket bucket = cluster.openBucket("esper");
+        new Thread() {
+            public void run() {
+                for(int i = 0; i < 25000; i++) {
+                    bucket.upsert(RawJsonDocument.create("test" + i, value));
+                }
+            }
+        }.start();
+        new Thread() {
+            public void run() {
+                for(int i = 25000; i < 50000; i++) {
+                    bucket.upsert(RawJsonDocument.create("test" + i, value));
+                }
+            }
+        }.start();
+        new Thread() {
+            public void run() {
+                for(int i = 50000; i < 75000; i++) {
+                    bucket.upsert(RawJsonDocument.create("test" + i, value));
+                }
+            }
+        }.start();
+        new Thread() {
+            public void run() {
+                for(int i = 75000; i < 100000; i++) {
+                    bucket.upsert(RawJsonDocument.create("test" + i, value));
+                }
+            }
+        }.start();
+
     }
 }
